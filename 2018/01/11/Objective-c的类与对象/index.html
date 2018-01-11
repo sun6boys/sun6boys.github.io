@@ -1,0 +1,81 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Objective-c的类与对象 · Charon的小窝</title><meta name="description" content="Objective-c的类与对象 - Charon"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/logo.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://charonchu.club/atom.xml" title="Charon的小窝"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/logo.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">主页</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">目录</a></li><li class="nav-list-item"><a href="https://github.com/sun6boys" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Objective-c的类与对象</h1><div class="post-info">Jan 11, 2018</div><div class="post-content"><p>从编程发展史来看，早期软件比较简单，我们只需要面向过程编程：</p>
+<ul>
+<li>定义函数</li>
+<li>定义数据</li>
+<li>各种函数和数据的操作</li>
+</ul>
+<p>当软件发展起来，软件越来越大，代码量也越来越大，我们的编写就有麻烦了：</p>
+<ul>
+<li>函数越来越多，命名容易冲突。</li>
+<li>代码重复</li>
+<li>变量生命周期难以管理</li>
+</ul>
+<p>为了解决上述问题面向对象思想呼之而来。</p>
+<h3 id="1-类、对象与模块"><a href="#1-类、对象与模块" class="headerlink" title="1. 类、对象与模块"></a>1. 类、对象与模块</h3><p>面向对象从传统意义上的解释是封装，继承和多态。打个比方现在需要盖一栋房子，分为三个步骤：</p>
+<ul>
+<li>打地基<ul>
+<li>需要用到工种：钢筋工、瓦工</li>
+<li>需要用到的材料：混凝土、钢筋</li>
+</ul>
+</li>
+<li>砌墙体<ul>
+<li>需要用到工种：瓦工</li>
+<li>需要用到的材料：砖、混凝土</li>
+</ul>
+</li>
+<li>盖屋顶<ul>
+<li>需要用到的工种：木工、瓦工</li>
+<li>需要用到的材料：木头、瓦片、混凝土</li>
+</ul>
+</li>
+</ul>
+<p>这几个步骤抽象出来：钢筋工、瓦工、木工、混凝土、钢筋、砖、瓦片等，然后你发现钢筋工、瓦工、木工有共同的行为行为work（干活），于是抽象出一个工人。砖、混凝土、钢筋、瓦片也有一些共同特性比如膨胀系数等，然后就从中衍生出抽象。</p>
+<ul>
+<li>遇到重复的逻辑，可实现抽象。</li>
+<li>粒度，即如果只被依赖某一部分，则表明可继续分解。</li>
+</ul>
+<p><strong>递归是编程当中一个重要思想，递归当中有终止条件，模块设计与抽象（或函数调用）也有终止条件，否则如上所说，砖、混凝土、钢筋、瓦片还可以抽象出分子原子，但这对我们是毫无意义的。终止条件是什么，这个是靠靠工程师的经验来判断</strong></p>
+<p>砖、混凝土、钢筋、瓦片从这个例子当中只有一些特性，没有行为，我认为算是一种数据结构不能称之为模块，而钢筋工、瓦工、木工会有work的行为，那这便可以称之模块。打地基、砌墙体、盖屋顶需要对一些模块以及数据结构进行处理，可以称之为复合或复杂性模块。之后盖房子也抽象出一个模块由打地基、砌墙体、盖屋顶三个模块构成。</p>
+<p>由类创建出来的实例称为对象。</p>
+<h3 id="2-OC中的对象"><a href="#2-OC中的对象" class="headerlink" title="2. OC中的对象"></a>2. OC中的对象</h3><p>上一章介绍的类和对象抽象描述。从物理层面上一个对象在内存当中的形态是怎样呢？</p>
+<h5 id="数组的物理形态"><a href="#数组的物理形态" class="headerlink" title="数组的物理形态"></a>数组的物理形态</h5><p>这里先介绍下<code>数组</code>在内存当中的形态。以64位操作系统，且存放对象的数组为前提。</p>
+<p><img src="https://github.com/sun6boys/Documents/blob/master/Resources/array.png?raw=true" alt="icon"></p>
+<p>如上图所示，数组的本质是一块连续内存，从array基地址第0-8个字节存放第一个元素的地址，第9-16个字节存放第二个元素的地址……</p>
+<p>所以当我们用array[x] 取对象时会从array基地址 + x <em> 8字节 ~ array基地址 + （x + 1） </em> 8的内存中取出内容即为该对象的地址。</p>
+<h5 id="OC对象的物理形态"><a href="#OC对象的物理形态" class="headerlink" title="OC对象的物理形态"></a>OC对象的物理形态</h5><p>假如现在定义一个Person类如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@interface Person : NSObject</div><div class="line">&#123;</div><div class="line">    NSString *_name;</div><div class="line">    NSUInteger _age;</div><div class="line">    NSString *_sex；</div><div class="line">&#125;</div><div class="line">@property (nonatomic,copy) NSString *name;</div><div class="line">@property (nonatomic, assign) NSUInteger age;</div><div class="line">@property (nonatomic, copy) NSString *sex;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>那由Person类构建出来的person实例在内存当中的结构如下图，第一个isa是Person基类NSObject的成员变量。</p>
+<p><img src="https://github.com/sun6boys/Documents/blob/master/Resources/instance.png?raw=true" alt="icon"></p>
+<p>也就是说，一个实例对象的内存大小，由自己本身的成员变量数量和父类成员变量数量，父类的父类一直到基类NSObject的成员变量数量总和决定的，一个成员变量分配8个字节（64位操作系统） 即使如NSUInteger这样的基本数据类型，也是分配的8个字节。我们可以通过<code>class_getInstanceSize</code>获取类的实例对象的内存大小</p>
+<p>如果把person当成一个数组person.name 等同于person[1]，</p>
+<blockquote>
+<p>Objective-c是一个动态语言，可以在运行时添加方法或者交换方法等，但我们都知道一旦类注册后，便不能添加成员变量（包括category中也不能添加成员变量），这是因为如果可以随意添加成员变量，那在添加前创建的实例的内存大小由原先的成员变量数量决定，如果用老实例对象获取新成员变量一定会造成类似数组越界的野指针问题。除非苹果设计成类似数组那样当数组中元素数量达到扩容因子数值，重新开辟一块更大的内存，把原先的内容复制过去，但这好像不太现实。。。</p>
+</blockquote>
+<p>Objcetive-c中的对象即使如NSProxy或者block，内存当中头8个字节一定存放的是名为isa指针。那isa是什么呢？我如何知道第9-16个字节存放的是哪个成员变量的地址呢？</p>
+<h5 id="isa"><a href="#isa" class="headerlink" title="isa"></a>isa</h5><p>isa可以理解成身份证明，每个实例对象的isa指针指向它所属的类（[person class]）,它是运行时环境加载完成便构建出来存放在内存data段。它是个结构体，也被称为类对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">struct objc_class &#123;</div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line"></div><div class="line">#if !__OBJC2__</div><div class="line">    Class _Nullable super_class                              OBJC2_UNAVAILABLE;</div><div class="line">    const char * _Nonnull name                               OBJC2_UNAVAILABLE;</div><div class="line">    long version                                             OBJC2_UNAVAILABLE;</div><div class="line">    long info                                                OBJC2_UNAVAILABLE;</div><div class="line">    long instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_ivar_list * _Nullable ivars                  OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_method_list * _Nullable * _Nullable methodLists                    OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_cache * _Nonnull cache                       OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE;</div><div class="line">#endif</div><div class="line"></div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure>
+<ul>
+<li><strong>Class _Nonnull isa</strong> 类对象头8个字节也是一个isa指针，所以它也是一个对象，它指向的是meta class（此处略过不表）</li>
+<li><strong>Class super_class</strong> 父类对象的指针</li>
+<li><strong>const char name</strong> 类名</li>
+<li><strong>long version</strong> 类的版本信息</li>
+<li><strong>long instance_size</strong> 实例对象所占内存大小</li>
+<li><strong>ivars</strong> 成员变量集合</li>
+<li><strong>methodLists</strong> 实例方法列表</li>
+<li><strong>cache</strong> 最近调用的方法列表</li>
+<li><strong>protocols</strong> 协议列表</li>
+</ul>
+<blockquote>
+<p>Runtime的一些知识网上较多，此处略过不表，可以去查询比如oc中函数如何调用，交换方法，meta class等知识。</p>
+</blockquote>
+<p>类对象当中<code>objc_ivar_list</code>存放的成员变量的集合<code>objc_ivar</code>,上一小节中提到person.name是如何知道name的存放地址距person基地址偏移量呢 ，可以通过<code>ivar_getOffset</code>来获得具体的偏移量。</p>
+<h3 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h3><p>本文讲述了类的抽象描述以及OC对象的内存形态。如果您通过这篇文章知道下面<code>void *p</code>为什么会被当做Person的实例对象，那我的目的便达到了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Class personClass = [Person class];</div><div class="line">void *p = &amp;personClass;</div></pre></td></tr></table></figure></div></article></div></main><footer><div class="paginator"><a href="/2018/01/07/HTTP协议小叙/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'seansun';
+var disqus_identifier = '2018/01/11/Objective-c的类与对象/';
+var disqus_title = 'Objective-c的类与对象';
+var disqus_url = 'http://charonchu.club/2018/01/11/Objective-c的类与对象/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2018 <a href="http://charonchu.club">Charon</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>
