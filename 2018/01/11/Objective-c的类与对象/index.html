@@ -70,7 +70,7 @@
 </blockquote>
 <p>类对象当中<code>objc_ivar_list</code>存放的成员变量的集合<code>objc_ivar</code>,上一小节中提到person.name是如何知道name的存放地址距person基地址偏移量呢 ，可以通过<code>ivar_getOffset</code>来获得具体的偏移量。</p>
 <h3 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h3><p>本文讲述了类的抽象描述以及OC对象的内存形态。如果您通过这篇文章知道下面<code>void *p</code>为什么会被当做Person的实例对象，那我的目的便达到了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Class personClass = [Person class];</div><div class="line">void *p = &amp;personClass;</div></pre></td></tr></table></figure></div></article></div></main><footer><div class="paginator"><a href="/2018/01/07/HTTP协议小叙/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'seansun';
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Class personClass = [Person class];</div><div class="line">void *p = &amp;personClass;</div></pre></td></tr></table></figure></div></article></div></main><footer><div class="paginator"><a href="/2018/01/14/项目结构分层设计/" class="prev">PREV</a><a href="/2018/01/07/HTTP协议小叙/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'seansun';
 var disqus_identifier = '2018/01/11/Objective-c的类与对象/';
 var disqus_title = 'Objective-c的类与对象';
 var disqus_url = 'http://charonchu.club/2018/01/11/Objective-c的类与对象/';

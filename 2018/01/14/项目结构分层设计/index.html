@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 项目结构分层设计 · Charon的小窝</title><meta name="description" content="项目结构分层设计 - Charon"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/logo.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://charonchu.club/atom.xml" title="Charon的小窝"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/logo.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">主页</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">目录</a></li><li class="nav-list-item"><a href="https://github.com/sun6boys" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">项目结构分层设计</h1><div class="post-info">Jan 14, 2018</div><div class="post-content"><p>前阵在cocochina看到一位iOS同仁发帖，大意是这位兄弟去面试，面试官问他们的项目架构。<a href="http://www.cocoachina.com/bbs/read.php?tid=1730089" target="_blank" rel="noopener">原帖</a>，记得以前我在面试的时候也有面试官问过我这个问题，当时只是从架构模式（MVC,MVVM）方面切入回答了这个问题。</p>
+<p>MVC将业务分成三层，数据层、业务层、展示层，如果从纵向维度来分析还应考虑项目结构分层设计。</p>
+<h3 id="结构分层设计"><a href="#结构分层设计" class="headerlink" title="结构分层设计"></a>结构分层设计</h3><p>如下图所示</p>
+<p><img src="https://github.com/sun6boys/Documents/blob/master/Resources/projectScreenShot.png?raw=true" alt="icon"></p>
+<p>这里我根据项目结构分成<code>SystemFramework</code>、<code>Foundation</code>、<code>Infrastureture</code>、<code>Business</code>、<code>BU</code>五层，这5层设计遵守如下准则：</p>
+<ul>
+<li><strong>向下依赖</strong> 高层模块可依赖低层模块，低层模块不得依赖高层模块。</li>
+<li><strong>跨层依赖</strong> 在遵守<strong>向下依赖</strong>前提下，高层模块可跨层依赖低层模块，比如<code>Business</code>层可以依赖<code>Foundation</code>层。</li>
+</ul>
+<p>开发项目就像现实中盖房子，如果地基不牢靠，那墙体结构就不会牢靠，屋顶也不会牢靠。如果墙体不牢靠那屋顶不会牢靠，最终导致整栋房子都不牢靠。由此可见地基对于一栋房子来说尤其重要。最上层的结构<strong>（屋顶）</strong>会受到下面所有结构的影响。</p>
+<p>因<strong>跨层依赖</strong>的准则，<code>Infrastureture</code>、<code>Business</code>和<code>BU</code>均可依赖<code>Foundation</code>层，所以<code>Foundation</code>和<code>Infrastureture</code>犹如房子的地基般，一旦<code>Foundation</code>和<code>Infrastureture</code>有变动会对上面所有的依赖到的模块都会有影响，进而造成房子不稳定。</p>
+<p><strong>所以越低层的模块，越要尽量少的修改功能，但是可是新增功能。</strong></p>
+<h3 id="解耦"><a href="#解耦" class="headerlink" title="解耦"></a>解耦</h3><p>高层可以直接依赖低层，所以我们常说的解耦是处于同一层模块的解耦。</p>
+<h4 id="BU层的解耦"><a href="#BU层的解耦" class="headerlink" title="BU层的解耦"></a>BU层的解耦</h4><p><code>BU</code>层的解耦，目前有以下几个方案：</p>
+<ul>
+<li>protocol注册</li>
+<li>url注册</li>
+<li>Target-Action</li>
+</ul>
+<p>以上3个方案，我在简书上面有介绍，github上也有相应的Demo。</p>
+<h4 id="其他层的解耦"><a href="#其他层的解耦" class="headerlink" title="其他层的解耦"></a>其他层的解耦</h4><p><code>BU</code>层的解耦的那3种方案本质上就是<strong>中介者设计模式</strong>的应用，但是如果把<strong>中介者设计模式</strong>应用于所有的模块解耦无疑也会增加开发难度。我们还可以使用以下方式:</p>
+<ul>
+<li>同一层模块A 依赖模块B的部分功能，可以把这部分功能抽成模块C，并且将模块C下沉，模块A和B依赖位于下层模块C。</li>
+<li>同一层模块A 依赖模块B的部分功能，抽象出依赖部分功能的接口（protocol），将接口下沉，A和B依赖protocol</li>
+</ul>
+<hr>
+<p>全文完，<a href="https://github.com/sun6boys/Documents/blob/master/%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84.md" target="_blank" rel="noopener">源文件地址</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="/2018/01/11/Objective-c的类与对象/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'seansun';
+var disqus_identifier = '2018/01/14/项目结构分层设计/';
+var disqus_title = '项目结构分层设计';
+var disqus_url = 'http://charonchu.club/2018/01/14/项目结构分层设计/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2018 <a href="http://charonchu.club">Charon</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>
